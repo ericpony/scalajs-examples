@@ -1,6 +1,9 @@
 # sbt target folders
 target/
 
+# vim files
+*.ori
+
 # eclipse project files
 /.settings
 /.classpath
