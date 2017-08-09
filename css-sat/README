@@ -1,0 +1,2 @@
+To view the data, run `python -m SimpleHTTPServer` under this folder
+and open `http://localhost:8000/` in a web browser.

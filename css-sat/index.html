@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <title>CSV to HTML Table</title>
+    <meta name="author" content="Derek Eder">
+    <meta content="Display any CSV file as a searchable, filterable, pretty HTML table" />
+
+    <!-- Bootstrap core CSS -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/dataTables.bootstrap.css" rel="stylesheet">
+    <!--<link href="https://cdn.datatables.net/1.10.15/css/jquery.dataTables.min.css" rel="stylesheet">-->
+    <link href="https://cdn.datatables.net/fixedheader/3.1.2/css/fixedHeader.dataTables.min.css" rel="stylesheet">
+  </head>
+
+  <body>
+    <h4><a href="javascript:void(0)" onclick="update_table('0725',this.innerText)">Minifier + Refactor (25th Jul)</a></h4>
+    <h4><a href="javascript:void(0)" onclick="update_table('0808',this.innerText)">Minifier + Refactor + Minifier (08th Aug)</a></h4>
+    <!--<h4><a href="javascript:void(0)" onclick="update_table('0808',this.innerText)">Minifier + Refactor + Minifier (08th Aug)</a></h4>-->
+    <br />
+    <pre style="font-size:1em">
+    <b>Columns</b>
+    Prep:  The name of the minifier/pre-processor
+    Mnfy:  The size removed by the minifier
+    Trm:   The size removed after the 1st iteration
+    Itr:   The number of iterations run within the timeout
+    Rfrt:  The size removed by the tool
+    Diff1: The size removed by the minifier and the tool (= Mnfy + Rfrt)
+    Diff2: The size removed by applying the minifier (if any) again after refactoring
+    <b>Remarks</b>
+    1. Percentages of sizes are computed w.r.t. the original file sizes.
+    2. Sizes here are physical sizes, not those listed in timings.txt.
+    </pre>
+    <center>
+    <h3 id="title"></h3>
+    </center>
+    <br />
+    <div class="container-fluid">
+      <div id='table-container'></div>
+    </div><!-- /.container -->
+
+    <footer class='footer'>
+      <div class='container-fluid'>
+        <hr />
+      </div>
+    </footer>
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script type="text/javascript" src="//code.jquery.com/jquery-1.12.4.js"></script>
+    <script type="text/javascript" src="js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="js/jquery.csv.min.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/1.10.15/js/jquery.dataTables.min.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/responsive/2.1.1/js/dataTables.responsive.min.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/colreorder/1.3.3/js/dataTables.colReorder.min.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/fixedheader/3.1.2/js/dataTables.fixedHeader.min.js"></script>
+    <script type="text/javascript" src="js/csv_to_html_table.js"></script>
+    <script>
+      function g(id) {
+        return document.getElementById(id)
+      }
+      function update_table (date,title) {
+        location.hash = date + '&' + encodeURIComponent(title);
+        g('table-container').innerHTML = '';
+        g('title').innerText = title || '';
+        CsvToHtmlTable.init({
+          csv_path: 'data/results-' + date + '.txt',
+          element: 'table-container', 
+          allow_download: true,
+          csv_options: {separator: ',', delimiter: '"'},
+          datatables_options: {paging: false, colReorder: true, responsive: true, fixedHeader: true}
+        });
+      }
+      if(location.hash) {
+        var info = location.hash.substr(1).split('&');
+        update_table(info[0], decodeURIComponent(info[1]));
+      }
+    </script>
+  </body>
+</html>
